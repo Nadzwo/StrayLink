@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up Page - Interactive UX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS SAMA SEPERTI SEBELUMNYA (DENGAN SEDIKIT TAMBAHAN) --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #2c3e50; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background-color: #fff; width: 900px; height: 600px; display: flex; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        
+        /* KIRI */
+        .left-panel { flex: 1; background-image: url('https://images.unsplash.com/photo-1459156212016-c812468e2115?q=80&w=1000&auto=format&fit=crop'); background-size: cover; background-position: center; position: relative; display: flex; flex-direction: column; justify-content: center; padding: 40px; color: white; }
+        .left-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.6)); }
+        .left-content { position: relative; z-index: 1; }
+        .left-content h1 { font-size: 2.5rem; font-weight: 600; line-height: 1.2; margin-bottom: 10px; }
+        
+        /* KANAN */
+        .right-panel { flex: 1; padding: 40px 50px; display: flex; flex-direction: column; position: relative; overflow-y: auto; } /* overflow-y: auto agar bisa discroll jika tag banyak */
+        .header-form h2 { font-size: 2rem; color: #333; margin-bottom: 5px; }
+        .header-form p { font-size: 0.9rem; color: #666; margin-bottom: 25px; }
+        .header-form a { color: #333; font-weight: 600; text-decoration: none; }
+        
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 12px 0; border: none; border-bottom: 1px solid #ddd; outline: none; font-size: 1rem; transition: border-color 0.3s; }
+        .input-group input:focus { border-bottom: 1px solid #1b2e25; }
+
+        /* CSS BARU: Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 35px;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* CSS BARU: Tags System */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            min-height: 30px;
+        }
+        .tag {
+            background-color: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 20px; /* Lebih bulat */
+            font-size: 0.8rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+            animation: fadeIn 0.3s ease; /* Animasi muncul */
+        }
+        .tag i {
+            margin-left: 8px;
+            cursor: pointer;
+            color: #888;
+            font-size: 0.7rem;
+        }
+        .tag i:hover { color: #ff4d4d; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Button */
+        .btn-create { width: 100%; padding: 15px; background-color: #1b2e25; color: white; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 20px; margin-bottom: 20px; transition: all 0.3s; }
+        .btn-create:hover { background-color: #2c4a3b; transform: translateY(-2px); }
+        .btn-create:active { transform: translateY(0); }
+
+        /* Radio & Google */
+        .radio-group { display: flex; gap: 30px; margin-bottom: 20px; }
+        .radio-label { display: flex; align-items: center; font-size: 0.9rem; cursor: pointer; color: #555; }
+        .radio-label input { margin-right: 8px; }
+        .google-signup { text-align: center; font-size: 0.9rem; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-panel">
+            <div class="left-content">
+                <h1>Create your<br>Free Account</h1>
+                <p>Share your artwork and Get project!</p>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="header-form">
+                <h2>Sign up</h2>
+                <p>Already have an account? <a href="#">Sign In</a></p>
+            </div>
+
+            <form id="signupForm">
+                <div class="radio-group">
+                    <label class="radio-label"><input type="radio" name="type" checked> Projects</label>
+                    <label class="radio-label"><input type="radio" name="type"> Designs</label>
+                </div>
+
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="example@mail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••" required>
+                    <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+
+                <div class="input-group">
+                    <label>Select Skills (Press Enter to add)</label>
+                    <input type="text" id="skillInput" placeholder="Type skill & hit Enter...">
+                    
+                    <div class="tags-container" id="tagsContainer">
+                        </div>
+                    
+                    <input type="hidden" name="skills_data" id="skillsHiddenInput">
+                </div>
+
+                <button type="submit" class="btn-create">Create an Account</button>
+
+                <div class="google-signup">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G" width="20">
+                    Sign up with Google
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. LOGIKA TAGS / SKILLS
+        const skillInput = document.getElementById('skillInput');
+        const tagsContainer = document.getElementById('tagsContainer');
+        const skillsHiddenInput = document.getElementById('skillsHiddenInput');
+        
+        // Array untuk menyimpan skill
+        let tags = ['Illustration', 'Branding']; // Default tags
+
+        // Fungsi untuk merender (menampilkan) ulang tags
+        function renderTags() {
+            tagsContainer.innerHTML = ''; // Kosongkan container dulu
+            tags.slice().reverse().forEach((tag, index) => { // Reverse agar yang baru di depan (opsional)
+                const tagElement = document.createElement('div');
+                tagElement.classList.add('tag');
+                // Isi HTML tag + icon hapus
+                tagElement.innerHTML = `
+                    ${tag} 
+                    <i class="fas fa-times" onclick="removeTag('${tag}')"></i>
+                `;
+                tagsContainer.appendChild(tagElement);
+            });
+            // Update input hidden agar bisa dikirim ke database nantinya
+            skillsHiddenInput.value = tags.join(','); 
+        }
+
+        // Fungsi tambah tag saat Enter ditekan
+        skillInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Mencegah form tersubmit otomatis saat enter
+                const newTag = skillInput.value.trim();
+                
+                if (newTag && !tags.includes(newTag)) { // Cek biar gak duplikat
+                    tags.push(newTag);
+                    renderTags();
+                    skillInput.value = ''; // Reset input
+                }
+            }
+        });
+
+        // Fungsi hapus tag (dipanggil dari onclick di html tag di atas)
+        window.removeTag = function(tagName) {
+            tags = tags.filter(t => t !== tagName);
+            renderTags();
+        }
+
+        // Render tags saat pertama kali load
+        renderTags();
+
+
+        // 2. LOGIKA SHOW/HIDE PASSWORD
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            // Cek tipe input, kalau password ubah ke text, dan sebaliknya
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Ubah icon mata (slash atau biasa)
+            this.classList.toggle('fa-eye-slash');
+        });
+
+
+        // 3. LOGIKA SUBMIT FORM (SIMULASI)
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah refresh halaman
+            
+            // Ambil data
+            const email = document.getElementById('email').value;
+            const skillList = document.getElementById('skillsHiddenInput').value;
+
+            // Tampilkan alert sebagai feedback UX
+            alert(`Akun berhasil dibuat!\nEmail: ${email}\nSkills: ${skillList}`);
+            
+            // Di sinilah nanti kamu sambungkan ke PHP Backend
+        });
+    </script>
+
+</body>
+</html>
