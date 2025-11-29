@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Event - StrayLink</title>
+<link rel="icon" href="logo.png" type="image/png">
+
+<style>
+    nav a {font-size: 16px;color: #333;text-decoration: none;padding: 8px 10px;border-radius: 8px;   }
+    nav a:hover { background: #fff3e6; }
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+    .logo{font-weight:700;color:#007474}
+    nav a {font-size: 16px;color: #333;text-decoration: none;padding: 8px 10px;border-radius: 8px;   }
+    nav a:hover { background: #fff3e6; }
+    main{padding:24px;max-width:900px;margin:0 auto}
+    .card{background:#fff;padding:14px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.12);margin-bottom:14px}
+    input, textarea{width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;margin-top:10px}
+    .btn{padding:10px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn-primary{background:#2ea8a8;color:#fff}
+    .small{font-size:13px;color:#666}
+
+    :root{
+        --yellow:#4ad4cd;
+        --cta:#2ea8a8;
+        --muted:#6b6b6b;
+        --card-bg: #ffffff;
+        --page-bg: #f4f6f8;
+        --container: 1100px;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Roboto, Arial, sans-serif;background:var(--page-bg);color:#222;}
+
+    /* Top search area like screenshot */
+    .search-hero{
+        background: var(--yellow);
+        padding: 28px 20px;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+    }
+    .wrap{
+        max-width: var(--container);
+        margin: 0 auto;
+    }
+    .search-row{
+        display:flex;
+        gap:14px;
+        align-items:center;
+    }
+    .search-row .input{
+        flex:1;
+        display:flex;
+        gap:10px;
+    }
+    .search-row input[type="text"], .search-row select {
+        width:100%;
+        padding:12px 14px;
+        border-radius:6px;
+        border: 1px solid rgba(0,0,0,0.08);
+        font-size:14px;
+        box-sizing:border-box;
+        height:46px;
+        background:white;
+    }
+    .search-row .btn-search{
+        background: #1ca6af;
+        color:white;
+        border:none;
+        padding:12px 22px;
+        border-radius:9px;
+        cursor:pointer;
+        font-weight:600;
+        height:46px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+    .search-row .btn-search .ico{ font-weight:700; }
+
+    /* Content area with cards */
+    .content{
+        max-width: var(--container);
+        margin: 20px auto 80px;
+        padding: 0 18px;
+    }
+
+    .cards{
+        display:grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .card{
+        background: var(--card-bg);
+        border-radius: 18px;
+        padding: 18px;
+        display:flex;
+        gap:18px;
+        align-items:center;
+        box-shadow: 0 6px 20px rgba(13,30,42,0.06);
+        min-height: 150px;
+    }
+
+    .card .thumb{
+        flex: 0 0 120px;
+        width:120px;
+        height:120px;
+        border-radius:12px;
+        overflow:hidden;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#f6f6f6;
+        box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    }
+    .card .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .card .body{
+        flex:1;
+    }
+    .card .title{
+        font-size:20px;
+        color:#0d6b74;
+        margin:0 0 8px 0;
+        font-weight:700;
+    }
+    .meta{
+        display:flex;
+        gap:12px;
+        flex-wrap:wrap;
+        color:var(--muted);
+        font-size:14px;
+        margin-bottom:10px;
+    }
+
+    .meta .item{
+        display:flex;
+        gap:8px;
+        align-items:center;
+        min-width: 150px;
+    }
+    .meta .item .mark{
+        display:inline-block;
+        width:18px;
+        text-align:center;
+        color:#777;
+    }
+
+    .desc{
+        color:#333;
+        margin-bottom:12px;
+        font-size:14px;
+    }
+
+    .card .cta{
+        display:flex;
+        gap:10px;
+        align-items:center;
+    }
+
+    .btn{
+        border: none;
+        background: var(--cta);
+        color: white;
+        padding:10px 14px;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:600;
+    }
+
+    .btn.outline{
+        background:transparent;
+        border:1px solid rgba(0,0,0,0.08);
+        color:#333;
+        padding:8px 12px;
+    }
+
+    /* single-column on small screens */
+    @media (max-width:880px){
+        .cards{ grid-template-columns: 1fr; }
+        .search-row{ flex-direction:column; align-items:stretch; }
+        .search-row .input{ width:100%; }
+        .search-row .btn-search{ width:100%; }
+    }
+</style>
+</head>
+<body>
+    <header>
+        <div class="logo">StrayLink</div>
+        <nav>
+            <a href="index.html">Beranda</a>
+            <a href="adopsi.html">Adopsi</a>
+            <a href="donasi.html">Donasi</a>
+            <a href="konsultasi.html">Konsultasi</a>
+            <a href="profile.html">Profile</a>
+            <a href="event.html">Event</a>
+        </nav>
+    </header>
+    <!-- search hero -->
+    <div class="search-hero">
+        <div class="wrap">
+            <form id="searchForm" onsubmit="return doSearch(event)">
+                <div class="search-row" role="search" aria-label="Cari Event">
+                    <div class="input" style="flex:1;">
+                        <input id="q" type="text" placeholder="Cari Nama event, lokasi, atau kata kunci" aria-label="Cari" />
+                    </div>
+
+                    <div style="width:250px;">
+                        <select id="type" aria-label="Tipe Event">
+                            <option value="">Semua Tipe</option>
+                            <option value="adopsi">Adopsi</option>
+                            <option value="donasi">Donasi</option>
+                            <option value="konsultasi">Konsultasi</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn-search btn-search" aria-label="Cari Event">
+                            <span class="ico">🔍</span> Cari Event
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- content -->
+    <div class="content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h2 style="margin:0; color:#234; font-size:20px;">Event Terbaru</h2>
+            <small style="color:var(--muted)">Menampilkan 2 dari 2 event</small>
+        </div>
+
+        <div class="cards" id="cards">
+
+            <!-- Card 1 -->
+            <article class="card">
+                <div class="thumb">
+                    <!-- placeholder image; ganti event1.png -->
+                    <img src="event1.png" alt="Poster Event 1" />
+                </div>
+
+                <div class="body">
+                    <h3 class="title">Bazar Adopsi - Pejaten Shelter</h3>
+
+                    <div class="meta">
+                        <div class="item"><span class="mark">📍</span><span>Jakarta Selatan, DKI Jakarta</span></div>
+                        <div class="item"><span class="mark">📅</span><span>12 Mei 2025 · 09:00 - 14:00</span></div>
+                        <div class="item"><span class="mark">🔖</span><span>Khusus Kucing</span></div>
+                    </div>
+
+                    <p class="desc">Ajak keluarga datang ke Bazar Adopsi bareng Pejaten Shelter — adopsi serta konsultasi gratis dari dokter hewan.</p>
+
+                    <div class="cta">
+                        <button class="btn" onclick="openDetails('1')">Lihat Event</button>
+                        <button class="btn outline" onclick="shareEvent('Bazar Adopsi - Pejaten Shelter')">Bagikan</button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 2 -->
+            <article class="card">
+                <div class="thumb">
+                    <img src="event2.png" alt="Poster Event 2" />
+                </div>
+
+                <div class="body">
+                    <h3 class="title">Donasi & Pemeriksaan Gratis - Maria Stray Home</h3>
+
+                    <div class="meta">
+                        <div class="item"><span class="mark">📍</span><span>Tangerang Selatan, Banten</span></div>
+                        <div class="item"><span class="mark">📅</span><span>18 Mei 2025 · 10:00 - 16:00</span></div>
+                        <div class="item"><span class="mark">🔖</span><span>Khusus Anjing</span></div>
+                    </div>
+
+                    <p class="desc">Acara donasi untuk mendukung perawatan dan pemeriksaan kesehatan anjing-anjing di panti. Terbuka untuk umum.</p>
+
+                    <div class="cta">
+                        <button class="btn" onclick="openDetails('2')">Lihat Event</button>
+                        <button class="btn outline" onclick="shareEvent('Donasi & Pemeriksaan Gratis - Maria Stray Home')">Bagikan</button>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+
+<script>
+    // Mock behaviors
+    function doSearch(e){
+        e.preventDefault();
+        const q = document.getElementById('q').value.trim();
+        const t = document.getElementById('type').value;
+        alert('Pencarian: "' + q + '"' + (t ? (' , tipe: ' + t) : ''));
+        // di implementasi nyata: lakukan fetch/submit ke server untuk hasil
+        return false;
+    }
+
+    function openDetails(id){
+        // contoh: redirect ke event detail page
+        // di implementasi nyata: pakai event-id dinamis
+        alert('Buka detail event #' + id);
+    }
+
+    function shareEvent(text){
+        if(navigator.share){
+            navigator.share({title:'StrayLink Event', text});
+        } else {
+            // fallback: copy ke clipboard
+            navigator.clipboard?.writeText(text).then(()=>{
+                alert('Judul event disalin: ' + text);
+            }, ()=>{
+                alert('Gagal menyalin. Anda dapat membagikan secara manual.');
+            });
+        }
+    }
+</script>
+
+</body>
+</html>

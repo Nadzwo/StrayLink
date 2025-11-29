@@ -1,0 +1,58 @@
+.daftar-akun {
+    /* papan-putih */
+    background: #ffffff;
+    width: 380px;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    justify-content: center;
+    align-items: center;
+}
+
+.daftar-akun h2 {
+    /* judul */
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.daftar-akun input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-top: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.daftar-akun input:focus {
+    border-color: var(--primary-color);
+}
+
+.daftar-akun button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 25px;
+    background: var(--primary-color);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.daftar-akun button:hover {
+    background: #007474;
+}
+
+.login-text,
+.login-link {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
