@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Konsultasi - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    :root{--cta:#2ea8a8;--bg:#f7f9fa}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+
+    /* header */
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover{background:#fff3e6}
+
+    main{max-width:1100px;margin:20px auto;padding:0 18px}
+    .hero{display:flex;gap:16px;align-items:center}
+    .hero h1{margin:0;font-size:22px}
+
+    .container{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:18px}
+    .card{background:#fff;padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.04)}
+    label{display:block;margin-top:8px;font-weight:600}
+    input[type=text],input[type=email],textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;margin-top:6px}
+    input[type=file]{margin-top:8px}
+    .small{font-size:13px;color:#666}
+    .btn{padding:10px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn.primary{background:var(--cta);color:#fff}
+    .btn.ghost{background:#fff;border:1px solid #ddd}
+
+    /* previews */
+    .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .thumb{width:80px;height:80px;border-radius:8px;overflow:hidden;object-fit:cover;border:1px solid #eee}
+
+    /* consultations list */
+    .list{display:flex;flex-direction:column;gap:12px}
+    .item{padding:12px;border-radius:10px;border:1px solid #f0f0f0}
+    .item-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .meta{font-size:13px;color:#666}
+    .item-body{margin-top:8px}
+    .replies{margin-top:10px;border-top:1px dashed #eee;padding-top:10px}
+    .reply{background:#f9fffd;border-left:3px solid #bff0ea;padding:8px;border-radius:6px;margin-top:8px}
+    .reply .by{font-weight:700;font-size:13px}
+    .reply .text{margin-top:6px}
+
+    .vet-form{margin-top:8px;display:flex;gap:8px}
+    .vet-form input, .vet-form textarea{flex:1}
+
+    @media (max-width:980px){.container{grid-template-columns:1fr}.hero{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <div class="logo">
+        <img src="assets/logo.png" alt="Logo StrayLink">
+        <div style="font-weight:700;color:#007474">StrayLink</div>
+      </div>
+    </a>
+    <nav>
+      <a href="adopsi.html">Adopsi</a>
+      <a href="donasi.html">Donasi</a>
+      <a href="konsultasi.html" style="background:#e6fff9">Konsultasi</a>
+      <a href="event.html">Event</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Konsultasi dengan Dokter Hewan</h1>
+    </div>
+
+    <div class="container">
+      <!-- left: form + list -->
+      <div>
+        <div class="card">
+          <h3>Buat Pertanyaan Baru</h3>
+          <div class="small">Tambahkan foto (opsional) untuk memperjelas kondisi hewan.</div>
+          <label for="subject">Judul / Subjek</label>
+          <input id="subject" type="text" placeholder="Contoh: Anjing saya muntah terus" />
+
+          <label for="desc">Deskripsi / Keluhan</label>
+          <textarea id="desc" rows="5" placeholder="Jelaskan gejala, lama, dan perawatan yang sudah dilakukan..."></textarea>
+
+          <label for="images">Foto (maks 4) — JPG/PNG</label>
+          <input id="images" type="file" accept="image/*" multiple />
+          <div class="thumbs" id="thumbs"></div>
+
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button id="submitConsult" class="btn primary">Kirim Konsultasi</button>
+            <button id="clearForm" class="btn ghost">Bersihkan</button>
+          </div>
+        </div>
+
+        <div style="height:18px"></div>
+
+        <div class="card">
+          <h3>Riwayat Konsultasi Anda</h3>
+          <div class="list" id="consultList">
+            <!-- populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- right: info / tutorial -->
+      <aside>
+        <div class="card">
+          <h3>Tips Mengajukan Konsultasi</h3>
+          <ul class="small">
+            <li>Jelaskan gejala sebanyak mungkin dan sejak kapan muncul.</li>
+            <li>Tambahkan foto jelas bagian yang bermasalah (luka, muntah, kotoran, dsb).</li>
+            <li>Sertakan informasi usia, vaksinasi, dan obat-obatan yang diberikan.</li>
+          </ul>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <h3>Catatan Privasi</h3>
+          <div class="small">Foto yang Anda unggah disimpan di browser (localStorage) sebagai simulasi. Untuk penggunaan nyata, unggah ke server yang aman.</div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // utils
+    const $ = id => document.getElementById(id);
+    function uid(prefix='c'){ return prefix + Date.now() + Math.random().toString(36).slice(2,6); }
+
+    // image preview and handling
+    const imagesInput = $('images');
+    const thumbs = $('thumbs');
+    let stagingImages = []; // dataURLs
+
+    imagesInput.addEventListener('change', (e)=>{
+      const files = Array.from(e.target.files || []).slice(0,4);
+      thumbs.innerHTML = '';
+      stagingImages = [];
+      files.forEach(f=>{
+        if(!f.type.startsWith('image/')) return;
+        const r = new FileReader();
+        r.onload = ()=>{
+          stagingImages.push(r.result);
+          const img = document.createElement('img'); img.src = r.result; img.className='thumb';
+          thumbs.appendChild(img);
+        };
+        r.readAsDataURL(f);
+      });
+    });
+
+    // submit consultation
+    $('submitConsult').addEventListener('click', ()=>{
+      const subject = $('subject').value.trim();
+      const desc = $('desc').value.trim();
+      if(!subject || !desc) return alert('Isi judul dan deskripsi.');
+
+      const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+      const entry = {
+        id: uid('k'),
+        user_name: u ? (u.name || 'Pengguna') : 'Tamu',
+        user_email: u ? (u.email || '') : '',
+        subject,
+        desc,
+        images: stagingImages.slice(),
+        tanggal: new Date().toISOString(),
+        status: 'menunggu',
+        replies: []
+      };
+      const list = JSON.parse(localStorage.getItem('konsultasi') || '[]');
+      list.unshift(entry); // newest first
+      localStorage.setItem('konsultasi', JSON.stringify(list));
+
+      alert('Konsultasi terkirim. Dokter akan membalas melalui panel ini.');
+      // reset form
+      $('subject').value=''; $('desc').value=''; imagesInput.value=''; thumbs.innerHTML=''; stagingImages=[];
+      renderList();
+    });
+
+    $('clearForm').addEventListener('click', ()=>{ $('subject').value=''; $('desc').value=''; imagesInput.value=''; thumbs.innerHTML=''; stagingImages=[]; });
+
+    // render consultations
+    function renderList(){
+      const list = JSON.parse(localStorage.getItem('konsultasi') || '[]');
+      const container = $('consultList'); container.innerHTML='';
+      if(list.length===0){ container.innerHTML = '<div class="small">Belum ada konsultasi.</div>'; return; }
+
+      list.forEach(item=>{
+        const it = document.createElement('div'); it.className='item';
+        const date = new Date(item.tanggal).toLocaleString();
+        it.innerHTML = `
+          <div class="item-head">
+            <div>
+              <strong>${escapeHtml(item.subject)}</strong>
+              <div class="meta">oleh ${escapeHtml(item.user_name)} • ${date} • status: <strong>${item.status}</strong></div>
+            </div>
+            <div>
+              <button class="btn ghost" onclick="toggleDetails('${item.id}')">Tampilkan</button>
+            </div>
+          </div>
+          <div class="item-body" id="body-${item.id}" style="display:none">
+            <div class="small">${escapeHtml(item.desc)}</div>
+            <div class="thumbs" style="margin-top:8px">${(item.images||[]).map(src=>`<img class=\"thumb\" src=\"${src}\">`).join('')}</div>
+
+            <div class="replies" id="replies-${item.id}">
+              ${ renderRepliesHtml(item.replies) }
+            </div>
+
+          </div>
+        `;
+        container.appendChild(it);
+      });
+    }
+
+    function renderRepliesHtml(replies){
+      if(!replies || replies.length===0) return '<div class="small">Belum ada balasan dari dokter.</div>';
+      return replies.map(r=>`<div class="reply"><div class="by">${escapeHtml(r.by)} • <span class="meta">${new Date(r.t).toLocaleString()}</span></div><div class="text">${escapeHtml(r.text)}</div></div>`).join('');
+    }
+
+    function escapeHtml(str){ return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    function initSample(){
+      // add sample if none
+      if(localStorage.getItem('konsultasi')) return;
+      const sample = [{id:uid('k'), user_name:'Ani', user_email:'ani@example.com', subject:'Anjing kucing saya tidak mau makan', desc:'Sudah 2 hari tidak mau makan, kadang muntah.', images:[], tanggal:new Date().toISOString(), status:'menunggu', replies:[] }];
+      localStorage.setItem('konsultasi', JSON.stringify(sample));
+    }
+
+    // initial
+    initSample();
+    renderList();
+
+  </script>
+</body>
+</html>

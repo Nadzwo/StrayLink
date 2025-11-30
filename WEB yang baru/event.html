@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Event - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    :root{--page-bg:#f4f6f8;--yellow:#ffffff;--card-bg:#ffffff;--cta:#2ea8a8;--container:1100px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+
+    /* HEADER (aligned with profile.html) */
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover{background:#fff3e6}
+
+    main{padding:18px;max-width:var(--container);margin:18px auto}
+
+    /* SEARCH HERO */
+    .search-hero{background:var(--yellow);padding:22px;border-radius:14px;box-shadow:0 3px 8px rgba(0,0,0,0.06)}
+    .search-row{display:flex;gap:12px;align-items:center}
+    .search-row .input{flex:1;display:flex;gap:10px;align-items:center}
+    .search-row input[type=text]{flex:1;padding:12px;border-radius:10px;border:1px solid #dcdcdc;font-size:15px}
+    .search-row select{padding:10px;border-radius:10px;border:1px solid #dcdcdc}
+    .search-row button{padding:11px 14px;border-radius:10px;border:none;background:var(--cta);color:#fff;font-weight:700;cursor:pointer}
+
+    /* EVENTS GRID */
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:18px}
+    .card{background:var(--card-bg);padding:16px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,0.06)}
+    .card .meta{font-size:13px;color:#666;display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .card .title{margin:0 0 6px 0}
+    .card .desc{font-size:14px;color:#333}
+    .card .cta{margin-top:12px;display:flex;gap:8px}
+    .btn{padding:9px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn.primary{background:var(--cta);color:#fff}
+    .btn.outline{background:#fff;border:1px solid #ddd}
+
+    /* Responsive */
+    @media (max-width:900px){
+      .cards{grid-template-columns:1fr}
+      header{padding:12px}
+      .search-row{flex-direction:column;align-items:stretch}
+      .search-row button{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <div class="logo">
+        <img src="assets/logo.png" alt="Logo StrayLink">
+        <div style="font-weight:700;color:#007474">StrayLink</div>
+      </div>
+    </a>
+
+    <nav>
+      <a href="adopsi.html">Adopsi</a>
+      <a href="donasi.html">Donasi</a>
+      <a href="konsultasi.html">Konsultasi</a>
+      <a href="event.html" style="background:#e6fff9">Event</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="search-hero">
+      <div class="search-row">
+        <div class="input">
+          <input id="q" type="text" placeholder="Cari event, lokasi, atau kata kunci..." aria-label="Cari event">
+          <select id="filter">
+            <option value="all">Semua Kategori</option>
+            <option value="adopsi">Adopsi</option>
+            <option value="donasi">Donasi</option>
+            <option value="konsultasi">Konsultasi</option>
+          </select>
+        </div>
+        <button id="searchBtn" aria-label="Cari">🔍 Cari Event</button>
+      </div>
+    </div>
+
+    <div class="cards" id="cards">
+      <!-- sample event cards (keystore) -->
+      <div class="card">
+        <h3 class="title">Bazar Adopsi - Pejaten Shelter</h3>
+        <div class="meta"><div>📍 Jakarta Selatan</div><div>📅 12 Mei 2025 · 09:00 - 14:00</div><div>🔖 Khusus Kucing</div></div>
+        <p class="desc">Ajak keluarga datang ke Bazar Adopsi—adopsi serta konsultasi gratis dari dokter hewan. Tersedia juga stand donasi.</p>
+        <div class="cta"><button class="btn primary" onclick="openDetails('1')">Lihat Event</button><button class="btn outline" onclick="shareEvent('Bazar Adopsi - Pejaten Shelter')">Bagikan</button></div>
+      </div>
+
+      <div class="card">
+        <h3 class="title">Klinik Kesehatan Hewan Gratis</h3>
+        <div class="meta"><div>📍 Bogor</div><div>📅 20 Juni 2025 · 10:00 - 16:00</div></div>
+        <p class="desc">Konsultasi gratis dan vaksinasi dasar untuk hewan peliharaan dan hewan jalanan. Terbuka untuk umum.</p>
+        <div class="cta"><button class="btn primary">Lihat Event</button><button class="btn outline">Daftar</button></div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // ensure search button aligned with input (simple behavior)
+    document.getElementById('searchBtn').addEventListener('click', ()=>{
+      const q=document.getElementById('q').value.trim();
+      const f=document.getElementById('filter').value;
+      // naive client-side filter by title/desc
+      const cards=document.querySelectorAll('#cards .card');
+      cards.forEach(c=>{
+        const txt=(c.innerText||'').toLowerCase();
+        const match=(q==='' || txt.includes(q.toLowerCase()));
+        const matchFilter=(f==='all' || (c.innerText||'').toLowerCase().includes(f));
+        c.style.display = (match && matchFilter) ? '' : 'none';
+      });
+    });
+
+    function openDetails(id){ alert('Buka detail event id='+id); }
+    function shareEvent(title){ navigator.share ? navigator.share({title, text:title}) : alert('Bagikan: '+title); }
+  </script>
+</body>
+</html>

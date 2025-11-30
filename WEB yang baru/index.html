@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrayLink</title>
+    <link rel="icon" type="image" href="assets/logo.png">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            /* gunakan foto.png sebagai background (cover + centered). fixed membuat efek parallax ringan. */
+            background: url('assets/background.png') center/cover no-repeat fixed;
+            color: #002c35;
+        }
+    .heading1 {text-align: left;}
+    .heading1 h1{font-size:60px;margin:6px 0;color:#08304b} 
+    .heading1 h2{font-size:25px;margin:6px 0;color:#08304b}
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover{background:#fff3e6}
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .profile-photo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #2ea8a8;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .hero .cta-row {
+            display:flex;
+            gap:12px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .hero .btn {
+            background: #2ea8a8;
+            border: none;
+            padding: 12px 18px;
+            font-size: 16px;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display:inline-block;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 35px;
+            padding: 30px;
+        }
+
+        .feature-card {
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            width: 180px;
+            padding: 18px;
+            border-radius: 12px;
+            background: #fff;
+            transition: transform .12s, box-shadow .12s, color .12s;
+            cursor: pointer;
+            color: inherit; /* pastikan teks mewarisi warna dari parent */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+            /* ubah warna teks saat hover */
+            color: rgb(136, 0, 255);
+        }
+
+        /* jika ingin memastikan elemen spesifik ikut berubah, gunakan selector ini */
+        .feature-card:hover h3,
+        .feature-card:hover p {
+            color: rgb(136, 0, 255);
+        }
+
+        .feature-card.top-card {
+            width: 220px;
+            margin-bottom: -20px;
+        }
+
+        .feature-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 12px;
+            object-fit:cover;
+            border-radius:8px;
+        }
+
+        .feature-card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: right;
+            padding: 25px;
+            margin-top: 40px;
+        }
+
+        /* responsive minor tweaks */
+        @media (max-width:640px){
+            .hero h1{font-size:28px}
+            .feature-card{width:46%}
+        }
+    </style>
+</head>
+
+
+<body>
+    <header>
+        <a href="index.html" style="text-decoration:none;color:inherit">
+            <div class="logo" role="button">
+                <img src="assets/logo.png" alt="Logo StrayLink" style="max-height: 50px;">
+                <div style="font-weight:700;color:#007474">StrayLink</div>
+            </div>
+        </a>
+        <nav>
+            <a href="adopsi.html">Adopsi</a>
+            <a href="donasi.html">Donasi</a>
+            <a href="konsultasi.html">Konsultasi</a>
+            <a href="event.html">Event</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+
+    <section class="hero">
+        <div class="heading1">
+        <h1>Find your rescue, find your Love</h1>
+        <h2>Mari kita bantu mereka mendapatkan hidup yang layak dan</h2>
+        <h2>membangun ikatan berharga dengan menjadikan mereka bagian dari</h2>
+        <h2>keluarga kita. Bersama, kita dapat memberi mereka harapan</h2>
+        </div>
+     </section>
+
+    <section class="features">
+        <!-- Feature cards yang juga clickable -->
+        <a href="adopsi.html" style="text-decoration:none;">
+            <div class="feature-card" role="button" aria-label="Adopsi">
+                <img src="assets/icon1.png" alt="Adopsi">
+                <h3>Adopsi</h3>
+                <p>Cari hewan hilang atau yang siap diadopsi</p>
+            </div>
+        </a>
+        
+        <a href="donasi.html" style="text-decoration:none;">
+            <div class="feature-card" role="button" aria-label="Donasi">
+                <img src="assets/icon2.png" alt="Donasi">
+                <h3>Donasi</h3>
+                <p>Membantu hewan terlantar tanpa adopsi langsung</p>
+            </div>
+        </a>
+
+        <a href="konsultasi.html" style="text-decoration:none;">
+            <div class="feature-card" role="button" aria-label="Konsultasi">
+                <img src="assets/icon3.png" alt="Konsultasi">
+                <h3>Konsultasi</h3>
+                <p>Konsultasi ringan seputar kesehatan hewan</p>
+            </div>
+        </a>
+
+        <a href="event.html" style="text-decoration:none;">
+            <div class="feature-card" role="button" aria-label="Konsultasi">
+                <img src="assets/icon4.png" alt="Konsultasi">
+                <h3>Event</h3>
+                <p>Kegiatan bersama pecinta hewan</p>
+            </div>
+        </a>
+    </section>
+
+
+    <footer>
+        <p>StrayLink © 2025</p>
+    </footer>
+
+</body>
+</html>

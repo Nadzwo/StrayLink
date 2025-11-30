@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adopsi - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    :root{--cta:#2ea8a8;--bg:#f7f9fa}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+
+    /* Header - match other pages */
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover{background:#fff3e6}
+
+    main{max-width:1100px;margin:20px auto;padding:0 18px}
+    .hero{display:flex;gap:16px;align-items:center}
+    .hero h1{margin:0;font-size:22px}
+    .search{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .search input{padding:10px;border-radius:10px;border:1px solid #e0e0e0;width:260px}
+    .search select{padding:10px;border-radius:10px;border:1px solid #e0e0e0}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    .card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .card .meta{font-size:13px;color:#666;margin-top:8px}
+    .card .name{font-weight:700;margin-top:6px}
+    .card .info{margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+    .btn{padding:9px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn.primary{background:var(--cta);color:#fff}
+    .btn.outline{background:#fff;border:1px solid #ddd}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:50}
+    .panel{background:#fff;width:920px;max-width:95%;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.45);overflow:hidden}
+    .panel-body{display:flex;gap:16px;padding:18px}
+    .panel-body img{width:320px;height:320px;object-fit:cover;border-radius:8px}
+    .panel-right{flex:1}
+    .panel-right h2{margin:0 0 6px 0}
+    .panel-right .meta{color:#666;font-size:13px}
+    .panel-right p{margin-top:10px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .form-row input,textarea{padding:8px;border-radius:8px;border:1px solid #e6e6e6;width:100%}
+    .form-actions{display:flex;gap:8px;margin-top:10px}
+
+    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}.panel-body{flex-direction:column;align-items:stretch}.panel-body img{width:100%;height:220px}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}.search input{width:140px}}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <div class="logo">
+        <img src="assets/logo.png" alt="Logo StrayLink">
+        <div style="font-weight:700;color:#007474">StrayLink</div>
+      </div>
+    </a>
+
+    <nav>
+      <a href="adopsi.html" style="background:#e6fff9">Adopsi</a>
+      <a href="donasi.html">Donasi</a>
+      <a href="konsultasi.html">Konsultasi</a>
+      <a href="event.html">Event</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Katalog Hewan Terlantar</h1>
+      <div class="search">
+        <input id="search" placeholder="Cari (nama, jenis, kota)..." aria-label="Cari hewan">
+        <select id="speciesFilter"><option value="all">Semua Jenis</option><option value="anjing">Anjing</option><option value="kucing">Kucing</option><option value="burung">Burung</option></select>
+      </div>
+    </div>
+
+    <div class="grid" id="catalog"></div>
+  </main>
+
+  <!-- modal detail + form -->
+  <div id="modal" style="display:none" class="modal" role="dialog" aria-hidden="true">
+    <div class="panel">
+      <div style="padding:10px;text-align:right;border-bottom:1px solid #f0f0f0"><button id="closeModal" class="btn">✕</button></div>
+      <div class="panel-body">
+        <img id="modalImg" src="assets/animal-placeholder.jpg" alt="foto hewan">
+        <div class="panel-right">
+          <h2 id="modalName">Nama Hewan</h2>
+          <div class="meta" id="modalMeta">Jenis • Gender • Umur • Lokasi</div>
+          <p id="modalDesc">Deskripsi lengkap tentang kondisi hewan, catatan medis, kebiasaan, dll.</p>
+
+          <h4>Formulir Pengajuan Adopsi</h4>
+          <form id="adoptForm">
+            <div class="form-row">
+              <input id="app_name" type="text" placeholder="Nama Anda" required>
+              <input id="app_email" type="email" placeholder="Email" required>
+            </div>
+            <div class="form-row" style="margin-top:8px">
+              <input id="app_phone" type="tel" placeholder="Nomor Telepon" required>
+              <input id="app_location" type="text" placeholder="Kota / Alamat Singkat" required>
+            </div>
+            <textarea id="app_note" rows="4" placeholder="Kenapa ingin mengadopsi? (singkat)"></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Kirim Pengajuan</button>
+              <button type="button" id="cancelAdopt" class="btn">Batal</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // sample data (could be fetched from server later)
+    const sampleAnimals = [
+      {id:'h1',name:'Miko',species:'kucing',breed:'Persia',gender:'Jantan',age:'2 tahun',location:'Jakarta Selatan',img:'assets/animal1.jpg',desc:'Miko ditemukan di pinggir jalan, ramah pada anak, sudah steril dan divaksinasi.'},
+      {id:'h2',name:'Bella',species:'anjing',breed:'Campuran',gender:'Betina',age:'3 tahun',location:'Bogor',img:'assets/animal2.jpg',desc:'Aktif dan suka bermain, membutuhkan keluarga yang mau melatih sedikit.'},
+      {id:'h3',name:'Kiko',species:'burung',breed:'Kakatua',gender:'Jantan',age:'1 tahun',location:'Depok',img:'assets/animal3.jpg',desc:'Menyukai interaksi, perlu kandang yang aman dan cukup ruang terbang.'},
+      {id:'h4',name:'Luna',species:'kucing',breed:'Domestik',gender:'Betina',age:'6 bulan',location:'Jakarta Pusat',img:'assets/animal4.jpg',desc:'Anak kucing manis, suka dipeluk, cocok untuk adopsi keluarga.'}
+    ];
+
+    // persist sample to localStorage if not exists
+    if(!localStorage.getItem('hewanCatalog')) localStorage.setItem('hewanCatalog', JSON.stringify(sampleAnimals));
+
+    function loadCatalog(){
+      const q = (document.getElementById('search').value||'').toLowerCase();
+      const sp = document.getElementById('speciesFilter').value;
+      const list = JSON.parse(localStorage.getItem('hewanCatalog') || '[]');
+      const out = list.filter(a=>{
+        const matchesQuery = q === '' || (a.name+a.species+a.breed+a.location).toLowerCase().includes(q);
+        const matchesSpecies = sp === 'all' || a.species === sp;
+        return matchesQuery && matchesSpecies;
+      });
+      const el = document.getElementById('catalog');
+      if(out.length===0){ el.innerHTML = '<p style="grid-column:1/-1;color:#666">Tidak ada hewan yang cocok.</p>'; return; }
+      el.innerHTML = out.map(a=>`
+        <div class="card" data-id="${a.id}">
+          <img src="${a.img||'assets/animal-placeholder.jpg'}" alt="${a.name}">
+          <div class="name">${a.name} • ${a.breed}</div>
+          <div class="meta">${capitalize(a.species)} • ${a.gender} • ${a.age}</div>
+          <div class="meta">📍 ${a.location}</div>
+          <div class="info"><div class="small"></div><div><button class="btn primary" onclick="openDetail('${a.id}')">Lihat & Adopsi</button></div></div>
+        </div>
+      `).join('');
+    }
+
+    function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+    window.openDetail = function(id){
+      const list = JSON.parse(localStorage.getItem('hewanCatalog') || '[]');
+      const a = list.find(x=>x.id===id); if(!a) return alert('Hewan tidak ditemukan');
+      document.getElementById('modalImg').src = a.img || 'assets/animal-placeholder.jpg';
+      document.getElementById('modalName').innerText = `${a.name} (${a.breed})`;
+      document.getElementById('modalMeta').innerText = `${capitalize(a.species)} • ${a.gender} • ${a.age} • ${a.location}`;
+      document.getElementById('modalDesc').innerText = a.desc || '-';
+      // store selected id in form dataset
+      document.getElementById('adoptForm').dataset.hewanId = a.id;
+      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('modal').setAttribute('aria-hidden','false');
+    }
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelAdopt').addEventListener('click', closeModal);
+    function closeModal(){ document.getElementById('modal').style.display='none'; document.getElementById('modal').setAttribute('aria-hidden','true'); }
+
+    // submit adoption
+    document.getElementById('adoptForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const hewanId = this.dataset.hewanId;
+      const pengaju_name = document.getElementById('app_name').value.trim();
+      const pengaju_email = document.getElementById('app_email').value.trim();
+      const pengaju_phone = document.getElementById('app_phone').value.trim();
+      const pengaju_location = document.getElementById('app_location').value.trim();
+      const aplikasi_text = document.getElementById('app_note').value.trim();
+      if(!pengaju_name||!pengaju_email) return alert('Isi nama dan email.');
+
+      const adopsi = JSON.parse(localStorage.getItem('adopsi') || '[]');
+      const catalog = JSON.parse(localStorage.getItem('hewanCatalog') || '[]');
+      const hewan = catalog.find(h=>h.id===hewanId) || {};
+      const entry = { hewan_id:hewanId, hewan_name:hewan.name||'-', hewan_species:hewan.species||'-', pengaju_name, pengaju_email, pengaju_phone, pengaju_location, aplikasi_text, tanggal_diajukan: new Date().toISOString(), status:'pending' };
+      adopsi.push(entry);
+      localStorage.setItem('adopsi', JSON.stringify(adopsi));
+
+      alert('Pengajuan adopsi terkirim. Kami akan menghubungi Anda via email.');
+      closeModal();
+      // clear form
+      this.reset();
+    });
+
+    // search handlers
+    document.getElementById('search').addEventListener('input', loadCatalog);
+    document.getElementById('speciesFilter').addEventListener('change', loadCatalog);
+
+    // initial render
+    loadCatalog();
+  </script>
+</body>
+</html>

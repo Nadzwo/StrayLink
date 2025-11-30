@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Donasi - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+    .logo{font-weight:700;color:#007474}
+    nav {display: flex;align-items: center;gap: 14px;}
+    nav a {font-size: 16px;color: #333;text-decoration: none;padding: 8px 10px;border-radius: 8px;   }
+    nav a:hover{background:#e6fffd}
+    main{padding:24px}
+    .card{background:#fff;padding:14px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,.12);margin-bottom:14px}
+    .progress{height:10px;background:#eee;border-radius:10px;overflow:hidden;margin-top:8px}
+    .bar{height:10px;background:#2ea8a8;width:0%}
+    .btn{padding:10px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn-primary{background:#2ea8a8;color:#fff}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45)}
+    .modal .box{background:#fff;padding:18px;border-radius:10px;width:90%;max-width:420px}
+    input[type="number"], input[type="text"]{width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid #ccc}
+  </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" style="text-decoration:none;">
+            <div class="logo" role="button">
+                <img src="assets/logo.png" alt="Logo StrayLink" style="max-height: 50px;">
+            </div>
+        </a>
+        <nav>
+            <a href="adopsi.html">Adopsi</a>
+            <a href="donasi.html">Donasi</a>
+            <a href="konsultasi.html">Konsultasi</a>
+            <a href="event.html">Event</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+    </header>
+
+  <main>
+    <h2>Donasi untuk Hewan & Shelter</h2>
+    <p class="small">Pilih campaign dan masukkan nominal donasi.</p>
+
+    <div id="campaigns"></div>
+  </main>
+
+  <div id="modal" class="modal">
+    <div class="box">
+      <h3 id="c-title"></h3>
+      <p id="c-desc"></p>
+      <p class="small">Target: <strong id="c-target"></strong> • Terkumpul: <strong id="c-collected"></strong></p>
+      <input id="don-amount" type="number" placeholder="Jumlah donasi (mis. 50000)" min="1000">
+      <input id="don-note" type="text" placeholder="Catatan (opsional)">
+      <div style="margin-top:10px;">
+        <button class="btn btn-primary" onclick="donate()">Donasi</button>
+        <button class="btn" onclick="closeModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+
+    const sample = [
+      { id: 101, judul:'Dana Perawatan Shelter A', slug:'perawatan-a', deskripsi:'Biaya obat & makanan', target_amount:5000000, collected_amount:1500000, tanggal_mulai:null, tanggal_selesai:null, status:'open' },
+      { id: 102, judul:'Vaksinasi Gratis Kucing', slug:'vaksin-kucing', deskripsi:'Vaksin & sterilisasi', target_amount:2000000, collected_amount:250000, tanggal_mulai:null, tanggal_selesai:null, status:'open' }
+    ];
+
+    function loadCampaigns(){
+      let arr = JSON.parse(localStorage.getItem('donasi') || 'null');
+      if(!arr || !arr.length){ arr = sample; localStorage.setItem('donasi', JSON.stringify(arr)); }
+      return arr;
+    }
+
+    function render(){
+      const ctn = document.getElementById('campaigns');
+      const arr = loadCampaigns();
+      ctn.innerHTML = arr.map(c => {
+        const pct = Math.min(100, Math.round((c.collected_amount / Math.max(1,c.target_amount))*100));
+        return `<div class="card">
+          <h3>${c.judul}</h3>
+          <p class="small">${(c.deskripsi||'')} </p>
+          <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+          <p class="small">Terkumpul: Rp ${number(c.collected_amount)} / Rp ${number(c.target_amount)}</p>
+          <button class="btn btn-primary" onclick="openModal(${c.id})">Donasi Sekarang</button>
+        </div>`;
+      }).join('');
+    }
+
+    function number(n){ return new Intl.NumberFormat('id-ID').format(n||0); }
+
+    let activeCampaign = null;
+    function openModal(id){
+      const arr = loadCampaigns();
+      const c = arr.find(x => x.id === id);
+      activeCampaign = c;
+      if(!c) return;
+      document.getElementById('c-title').innerText = c.judul;
+      document.getElementById('c-desc').innerText = c.deskripsi || '';
+      document.getElementById('c-target').innerText = 'Rp ' + number(c.target_amount);
+      document.getElementById('c-collected').innerText = 'Rp ' + number(c.collected_amount);
+      document.getElementById('don-amount').value = '';
+      document.getElementById('don-note').value = '';
+      document.getElementById('modal').style.display = 'flex';
+    }
+
+    function closeModal(){ document.getElementById('modal').style.display = 'none'; }
+
+    function donate(){
+      if(!user){ alert('Silakan login sebelum donasi.'); window.location='login.html'; return; }
+      const amt = Number(document.getElementById('don-amount').value);
+      if(!amt || amt < 1000){ alert('Masukkan nominal minimal 1.000'); return; }
+      const note = document.getElementById('don-note').value;
+
+      // simpan transaksi
+      const payments = JSON.parse(localStorage.getItem('pembayaran_donasi') || '[]');
+      const trx = {
+        id: Date.now(),
+        donasi_id: activeCampaign.id,
+        donor_email: user.email,
+        nominal: amt,
+        metode_pembayaran: 'manual',
+        tanggal_pembayaran: new Date().toISOString(),
+        status: 'confirmed',
+        catatan: note
+      };
+      payments.push(trx);
+      localStorage.setItem('pembayaran_donasi', JSON.stringify(payments));
+
+      // update collected
+      const arr = loadCampaigns();
+      const idx = arr.findIndex(x => x.id === activeCampaign.id);
+      if(idx >= 0){
+        arr[idx].collected_amount = (Number(arr[idx].collected_amount) || 0) + amt;
+        localStorage.setItem('donasi', JSON.stringify(arr));
+      }
+
+      alert('Terima kasih! Donasi Anda telah dicatat.');
+      closeModal();
+      render();
+    }
+
+    render();
+  </script>
+</body>
+</html>

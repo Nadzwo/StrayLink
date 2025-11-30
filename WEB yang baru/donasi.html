@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Donasi - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    :root{--cta:#2ea8a8;--bg:#f7f9fa}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+
+    /* header (consistent with other pages) */
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px}
+    nav a:hover{background:#fff3e6}
+
+    main{max-width:1100px;margin:20px auto;padding:0 18px}
+    .hero{display:flex;gap:16px;align-items:center}
+    .hero h1{margin:0;font-size:22px}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    .card{background:#fff;padding:12px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.06);display:flex;flex-direction:column}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .card .title{font-weight:700;margin-top:8px}
+    .card .desc{font-size:14px;color:#555;margin-top:6px}
+    .card .meta{font-size:13px;color:#666;margin-top:6px}
+    .card .actions{margin-top:auto;display:flex;gap:8px}
+    .btn{padding:9px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn.primary{background:var(--cta);color:#fff}
+    .btn.outline{background:#fff;border:1px solid #ddd}
+
+    /* modal */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:50}
+    .panel{background:#fff;width:880px;max-width:96%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:hidden}
+    .panel .header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f0f0f0}
+    .panel .body{padding:16px;display:flex;gap:16px}
+    .left{flex:1}
+    .right{width:320px}
+    .right .box{background:#fafafa;padding:12px;border-radius:10px}
+    label{display:block;margin-top:8px;font-weight:600}
+    input[type=number],input[type=text],input[type=email],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;margin-top:6px}
+    .methods{display:flex;gap:8px;margin-top:8px}
+    .method{flex:1;padding:10px;border-radius:8px;border:1px solid #e6e6e6;text-align:center;cursor:pointer}
+    .method.active{border-color:var(--cta);box-shadow:0 6px 18px rgba(46,168,168,.08)}
+    .small{font-size:13px;color:#666}
+    .helper{font-size:13px;color:#444;margin-top:6px}
+
+    @media (max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}.panel .body{flex-direction:column}.right{width:100%}}
+    @media (max-width:640px){.cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <div class="logo">
+        <img src="assets/logo.png" alt="Logo StrayLink">
+        <div style="font-weight:700;color:#007474">StrayLink</div>
+      </div>
+    </a>
+    <nav>
+      <a href="adopsi.html">Adopsi</a>
+      <a href="donasi.html" style="background:#e6fff9">Donasi</a>
+      <a href="konsultasi.html">Konsultasi</a>
+      <a href="event.html">Event</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Donasi untuk Hewan Terlantar</h1>
+    </div>
+
+    <div class="cards" id="causes">
+      <!-- sample causes -->
+      <div class="card">
+        <img src="assets/donate1.jpg" alt="Galang Dana Shelter">
+        <div class="title">Galang Dana Shelter Pejaten</div>
+        <div class="desc">Bantuan untuk pakan, obat, dan perawatan hewan di shelter kecil kami.</div>
+        <div class="meta">Terkumpul: Rp 2.500.000 • Target: Rp 10.000.000</div>
+        <div class="actions"><button class="btn primary" onclick="openDonate('shelter-pejaten')">Donasi Sekarang</button></div>
+      </div>
+
+      <div class="card">
+        <img src="assets/donate2.jpg" alt="Program Vaksin">
+        <div class="title">Program Vaksin Keliling</div>
+        <div class="desc">Vaksinasi dasar untuk hewan jalanan dan penampungan di area Jabodetabek.</div>
+        <div class="meta">Terkumpul: Rp 1.200.000 • Target: Rp 5.000.000</div>
+        <div class="actions"><button class="btn primary" onclick="openDonate('vaksin')">Donasi Sekarang</button></div>
+      </div>
+
+      <div class="card">
+        <img src="assets/donate3.jpg" alt="Program Sterilisasi">
+        <div class="title">Program Sterilisasi Murah</div>
+        <div class="desc">Sterilisasi massal untuk menekan angka kelahiran hewan jalanan.</div>
+        <div class="meta">Terkumpul: Rp 800.000 • Target: Rp 8.000.000</div>
+        <div class="actions"><button class="btn primary" onclick="openDonate('steril')">Donasi Sekarang</button></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- modal donation -->
+  <div id="donModal" style="display:none" class="modal" role="dialog" aria-hidden="true">
+    <div class="panel">
+      <div class="header">
+        <div>
+          <strong id="donTitle">Donasi</strong>
+          <div class="small" id="donSubtitle">Galang dana</div>
+        </div>
+        <div><button id="closeDon" class="btn">✕</button></div>
+      </div>
+      <div class="body">
+        <div class="left">
+          <label>Jumlah Donasi (Rp)</label>
+          <input id="amount" type="number" min="1000" step="500" placeholder="50000" required>
+          <div class="small helper">Masukkan nominal donasi. Minimal Rp 1.000.</div>
+
+          <label>Pemberi Donasi</label>
+          <input id="donorName" type="text" placeholder="Nama Anda" required>
+          <input id="donorEmail" type="email" placeholder="Email" style="margin-top:8px">
+
+          <label style="margin-top:12px">Metode Pembayaran</label>
+          <div class="methods" role="radiogroup" aria-label="Metode Pembayaran">
+            <div class="method active" data-method="bank">Transfer Bank</div>
+            <div class="method" data-method="ewallet">E-Wallet</div>
+            <div class="method" data-method="qris">QRIS</div>
+          </div>
+
+          <div id="methodOpts" style="margin-top:12px">
+            <!-- dynamic options here -->
+            <div id="bankOpts">
+              <label>Pilih Bank</label>
+              <select id="bankSelect">
+                <option value="BNI">BNI</option>
+                <option value="bca">BCA</option>
+                <option value="mandiri">Mandiri</option>
+              </select>
+              <label style="margin-top:8px">Nomor Rekening</label>
+              <input id="ewalletPhone" type="text" placeholder="xxxxxxxx">
+              <div class="small helper" style="margin-top:6px">Setelah Bayar, lakukan transfer via aplikasi e-banking Anda ke nomor/ID di atas.</div>
+            </div>
+
+            <div id="ewalletOpts" style="display:none">
+              <label>Pilih Provider E-Wallet</label>
+              <select id="ewalletSelect">
+                <option value="gopay">GoPay</option>
+                <option value="ovo">OVO</option>
+                <option value="dana">DANA</option>
+              </select>
+              <label style="margin-top:8px">Nomor/ID E-Wallet</label>
+              <input id="ewalletPhone" type="text" placeholder="08xx...">
+              <div class="small helper" style="margin-top:6px">Setelah Bayar, lakukan transfer via aplikasi e-wallet Anda ke nomor/ID di atas.</div>
+            </div>
+
+            <div id="qrisOpts" style="display:none">
+              <div class="box">
+                <div class="small">Scan QR berikut menggunakan aplikasi pembayaran Anda</div>
+                <div style="margin-top:8px;text-align:center;padding:12px;background:#fff;border-radius:8px"><img src="assets/qris-placeholder.png" alt="QRIS" style="max-width:180px"></div>
+                <div class="small helper" style="margin-top:8px">Atau klik "Buat Kode Pembayaran" untuk men-generate kode unik.</div>
+                <div style="margin-top:8px"><button id="genQris" class="btn outline">Buat Kode Pembayaran</button></div>
+                <div id="qrisCode" class="small" style="margin-top:8px;color:#007474"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <button id="payBtn" class="btn primary">Bayar & Simpan</button>
+            <button id="cancelPay" class="btn">Batal</button>
+          </div>
+        </div>
+
+        <div class="right">
+          <div class="box">
+            <div class="small">Ringkasan Donasi</div>
+            <h3 id="summaryAmount">Rp 0</h3>
+            <div class="small" id="summaryMethod">Metode: -</div>
+            <div class="small" id="summaryDonor" style="margin-top:8px">Nama: -</div>
+            <div class="small" id="summaryCause" style="margin-top:8px">Untuk: -</div>
+            <div style="margin-top:12px" class="small helper">Semua transaksi disimpan sementara di browser Anda (localStorage) sebagai simulasi pembayaran.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // helpers
+    function formatRupiah(n){ if(!n) return 'Rp 0'; return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)); }
+    function $(id){return document.getElementById(id)}
+
+    // open modal with cause id
+    let currentCause = null;
+    function openDonate(causeId){
+      currentCause = causeId;
+      const map = { 'shelter-pejaten': 'Galang Dana Shelter Pejaten', 'vaksin':'Program Vaksin Keliling', 'steril':'Program Sterilisasi Murah' };
+      $('donTitle').innerText = 'Donasi - ' + (map[causeId]||'Umum');
+      $('donSubtitle').innerText = map[causeId] || 'Donasi umum';
+      $('summaryCause').innerText = 'Untuk: ' + (map[causeId]||'Umum');
+
+      // prefill donor if logged in
+      const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+      if(u){ $('donorName').value = u.name || ''; $('donorEmail').value = u.email || ''; }
+      else{ $('donorName').value = ''; $('donorEmail').value = ''; }
+
+      // reset some fields
+      $('amount').value = '';
+      $('summaryAmount').innerText = formatRupiah(0);
+      // default method bank
+      setMethod('bank');
+      $('qrisCode').innerText = '';
+
+      $('donModal').style.display = 'flex';
+      $('donModal').setAttribute('aria-hidden','false');
+    }
+
+    $('closeDon').addEventListener('click', closeDonModal);
+    $('cancelPay').addEventListener('click', closeDonModal);
+    function closeDonModal(){ $('donModal').style.display='none'; $('donModal').setAttribute('aria-hidden','true'); }
+
+    // method selection
+    const methodEls = document.querySelectorAll('.method');
+    methodEls.forEach(m => m.addEventListener('click', ()=>{ setMethod(m.dataset.method); }));
+
+    function setMethod(m){
+      methodEls.forEach(x=> x.classList.toggle('active', x.dataset.method===m));
+      $('bankOpts').style.display = m==='bank' ? '' : 'none';
+      $('ewalletOpts').style.display = m==='ewallet' ? '' : 'none';
+      $('qrisOpts').style.display = m==='qris' ? '' : 'none';
+      $('summaryMethod').innerText = 'Metode: ' + ({bank:'Transfer Bank',ewallet:'E-Wallet',qris:'QRIS'}[m] || '-');
+      $('payBtn').dataset.method = m;
+    }
+
+    // update summary amount on input
+    $('amount').addEventListener('input', ()=>{ $('summaryAmount').innerText = formatRupiah($('amount').value); });
+    $('donorName').addEventListener('input', ()=>{ $('summaryDonor').innerText = 'Nama: ' + ($('donorName').value || '-'); });
+
+    // generate QRIS code (simulated)
+    $('genQris').addEventListener('click', ()=>{
+      const amt = Number($('amount').value) || 0;
+      const code = 'QRIS-' + Math.random().toString(36).slice(2,10).toUpperCase();
+      $('qrisCode').innerText = `Kode: ${code} • Rp ${amt}`;
+      // store last qris for later
+      $('genQris').dataset.code = code;
+      alert('Kode QRIS dibuat: ' + code);
+    });
+
+    // process payment (simulated)
+    $('payBtn').addEventListener('click', ()=>{
+      const amt = Number($('amount').value);
+      if(!amt || amt < 1000) return alert('Masukkan nominal minimal Rp 1.000');
+      const donor = $('donorName').value.trim() || '';
+      const email = $('donorEmail').value.trim() || '';
+      if(!donor) return alert('Isi nama pemberi donasi.');
+
+      const method = $('payBtn').dataset.method || 'bank';
+      const provider = (method==='bank') ? $('bankSelect').value : (method==='ewallet' ? $('ewalletSelect').value : 'qris');
+      const extra = {};
+      if(method==='ewallet') extra.ewallet_id = $('ewalletPhone').value.trim();
+      if(method==='qris') extra.qris_code = $('genQris').dataset.code || null;
+
+      const payments = JSON.parse(localStorage.getItem('pembayaran_donasi') || '[]');
+      const entry = {
+        id: 'don_' + Date.now(),
+        cause: currentCause || 'umum',
+        donor_name: donor,
+        donor_email: email,
+        method,
+        provider,
+        extra,
+        nominal: amt,
+        tanggal_pembayaran: new Date().toISOString(),
+        status: 'pending'
+      };
+      payments.push(entry);
+      localStorage.setItem('pembayaran_donasi', JSON.stringify(payments));
+
+      // show next steps depending on method
+      if(method==='bank'){
+        const bankInfo = {'BNI':'BNI • 1234 5678 901','bca':'BCA • 9876 5432 100','mandiri':'Mandiri • 5551 2223 999'}[provider] || provider;
+        alert('Terima kasih! Silakan transfer ' + formatRupiah(amt) + ' ke ' + bankInfo + '. Simpan bukti transfer dan konfirmasikan melalui email Anda.');
+      } else if(method==='ewallet'){
+        alert('Terima kasih! Silakan transfer ' + formatRupiah(amt) + ' melalui ' + provider + ' ke ID: ' + (extra.ewallet_id || '[masukkan ID Anda]').toString() + '.');
+      } else {
+        alert('Terima kasih! Silakan scan/selesaikan pembayaran via QRIS. Kode: ' + (extra.qris_code || '[buat kode QRIS]'));
+      }
+
+      closeDonModal();
+    });
+
+    // initial setup: ensure method dataset
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // ensure qris placeholder exists (if not, hide image)
+      const img = document.querySelector('#qrisOpts img'); if(!img) return;
+      // nothing else required
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profile - StrayLink</title>
+  <link rel="icon" href="assets/logo.png" />
+  <style>
+    :root{--cta:#2ea8a8}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, sans-serif;background:#4ad4cd}
+
+    /* HEADER - konsisten dengan halaman lain */
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .logo img{height:44px}
+    nav a{font-size:16px;color:#333;text-decoration:none;padding:8px 10px;border-radius:8px;margin-left:6px}
+    nav a:hover{background:#fff3e6}
+    nav a.active{background:#e6fff9}
+
+    main{padding:24px;max-width:980px;margin:18px auto}
+    .card{background:#fff;padding:16px;border-radius:12px;box-shadow:0 3px 12px rgba(0,0,0,.12);margin-bottom:14px}
+
+    /* profil - centering */
+    .profile-center{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px}
+    .avatar{width:140px;height:140px;border-radius:50%;object-fit:cover;border:4px solid #2ea8a8;background:#f6f6f6}
+    h2#u-name{margin:6px 0 0 0;text-align:center}
+    .small{font-size:13px;color:#666;text-align:center}
+    .profile-actions{display:flex;gap:10px;margin-top:6px}
+
+    /* bottom-centered logout area */
+    .logout-row{display:flex;justify-content:center;margin-top:14px}
+    .logout-btn{padding:10px 16px;border-radius:8px;border:none;cursor:pointer;background:#ff6b6b;color:white}
+
+    /* edit card */
+    #editCard .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    label{display:block;margin-top:8px;font-weight:600}
+    input[type=text],input[type=email],input[type=tel],textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;margin-top:6px}
+    .btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+    .btn-primary{background:var(--cta);color:#fff}
+    .btn-muted{background:#f3f3f3}
+
+    .list-item{padding:10px;border-bottom:1px solid #f0f0f0}
+
+    @media (max-width:880px){
+      #editCard .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" style="text-decoration:none;color:inherit">
+      <div class="logo" role="button">
+        <img src="assets/logo.png" alt="Logo StrayLink">
+        <div style="font-weight:700;color:#007474">StrayLink</div>
+      </div>
+    </a>
+    <nav>
+      <a href="adopsi.html">Adopsi</a>
+      <a href="donasi.html">Donasi</a>
+      <a href="konsultasi.html">Konsultasi</a>
+      <a href="event.html">Event</a>
+      <a href="profile.html" class="active">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <div class="profile-center">
+        <img id="avatarImg" class="avatar" src="assets/avatar-placeholder.png" alt="Avatar">
+        <div>
+          <h2 id="u-name">Nama Pengguna</h2>
+          <div class="small" id="u-email">email@example.com</div>
+        </div>
+
+        <div class="profile-actions" id="profileActions">
+          <button class="btn btn-primary" id="editBtn">Edit Profil</button>
+        </div>
+
+        <!-- logout ditempatkan terpusat di bawah -->
+        <div class="logout-row">
+          <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="editCard" style="display:none">
+      <h3>Edit Profil</h3>
+      <div class="grid">
+        <div>
+          <label for="name">Nama Lengkap</label>
+          <input id="name" type="text" />
+
+          <label for="email">Email</label>
+          <input id="email" type="email" />
+
+          <label for="phone">Nomor Telepon</label>
+          <input id="phone" type="tel" />
+
+          <label for="alamat">Alamat</label>
+          <input id="alamat" type="text" />
+        </div>
+
+        <div>
+          <label>Foto Profil (unggah)</label>
+          <input id="avatarInput" type="file" accept="image/*">
+          <p class="small">File akan disimpan di browser (localStorage) sebagai simulasi.</p>
+
+          <label for="bio">Bio / Deskripsi singkat</label>
+          <textarea id="bio" rows="6" maxlength="400" placeholder="Saya pecinta hewan..."></textarea>
+        </div>
+      </div>
+
+      <div style="margin-top:10px">
+        <button class="btn btn-primary" id="saveBtn">Simpan</button>
+        <button class="btn btn-muted" id="cancelEdit">Batal</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Riwayat Adopsi Saya</h3>
+      <div id="adopsiList"></div>
+    </div>
+
+    <div class="card">
+      <h3>Riwayat Donasi</h3>
+      <div id="donasiList"></div>
+    </div>
+
+    <div class="card">
+      <h3>Riwayat Konsultasi</h3>
+      <div id="konsulList"></div>
+    </div>
+
+  </main>
+
+  <script>
+    // ambil user login
+    const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+
+    function number(n){ return new Intl.NumberFormat('id-ID').format(n||0); }
+
+    function renderProfile(){
+      const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+      if(!u){
+        document.getElementById('u-name').innerText = 'Tidak ada pengguna';
+        document.getElementById('u-email').innerText = 'Silakan login untuk melihat profil.';
+        document.getElementById('editBtn').style.display = 'none';
+        return;
+      }
+      document.getElementById('u-name').innerText = u.name || '-';
+      document.getElementById('u-email').innerText = u.email || '-';
+      document.getElementById('avatarImg').src = u.avatar || 'assets/avatar-placeholder.png';
+    }
+
+    function toggleEdit(show){
+      document.getElementById('editCard').style.display = show ? 'block' : 'none';
+      if(show){
+        const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null') || {};
+        document.getElementById('name').value = u.name || '';
+        document.getElementById('email').value = u.email || '';
+        document.getElementById('phone').value = u.phone || '';
+        document.getElementById('alamat').value = u.alamat || '';
+        document.getElementById('bio').value = u.bio || '';
+      }
+    }
+
+    document.getElementById('editBtn').addEventListener('click', ()=> toggleEdit(true));
+    document.getElementById('cancelEdit').addEventListener('click', ()=> toggleEdit(false));
+
+    // upload avatar -> dataURL
+    document.getElementById('avatarInput').addEventListener('change', (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      if(!f.type.startsWith('image/')){ alert('Pilih file gambar.'); return; }
+      const r = new FileReader();
+      r.onload = ()=>{
+        document.getElementById('avatarImg').src = r.result;
+        // temp store in input dataset so save can persist it
+        document.getElementById('avatarInput').dataset.preview = r.result;
+      };
+      r.readAsDataURL(f);
+    });
+
+    // save profile
+    document.getElementById('saveBtn').addEventListener('click', ()=>{
+      const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null') || {};
+      u.name = document.getElementById('name').value.trim() || u.name || '';
+      u.email = document.getElementById('email').value.trim() || u.email || '';
+      u.phone = document.getElementById('phone').value.trim() || '';
+      u.alamat = document.getElementById('alamat').value.trim() || '';
+      u.bio = document.getElementById('bio').value.trim() || '';
+      const preview = document.getElementById('avatarInput').dataset.preview;
+      if(preview) u.avatar = preview;
+
+      localStorage.setItem('loggedInUser', JSON.stringify(u));
+      alert('Profil disimpan.');
+      toggleEdit(false);
+      renderProfile();
+      renderHistories();
+    });
+
+    // logout -> redirect ke login.php
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{
+      localStorage.removeItem('loggedInUser');
+      // arahkan ke login.php seperti permintaan
+      location.href = 'login.php';
+    });
+
+    // render histories
+    function renderHistories(){
+      const u = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+
+      // Adopsi
+      const adopsi = JSON.parse(localStorage.getItem('adopsi') || '[]');
+      const myA = u ? adopsi.filter(a => a.pengaju_email === u.email) : [];
+      const adEl = document.getElementById('adopsiList');
+      if(!u) { adEl.innerHTML = '<p class="small">Silakan login untuk melihat riwayat adopsi.</p>'; }
+      else if(myA.length === 0) { adEl.innerHTML = '<p class="small">Belum ada pengajuan adopsi.</p>'; }
+      else { adEl.innerHTML = myA.map(a => `
+        <div class="list-item">
+          <strong>Hewan ID: ${a.hewan_id}</strong>
+          <div class="meta">Diajukan: ${new Date(a.tanggal_diajukan).toLocaleString()} • Status: <strong>${a.status}</strong></div>
+          <div style="margin-top:6px">${(a.aplikasi_text||'').substring(0,200)}</div>
+        </div>
+      `).join(''); }
+
+      // Donasi
+      const payments = JSON.parse(localStorage.getItem('pembayaran_donasi') || '[]');
+      const myP = u ? payments.filter(p => p.donor_email === u.email) : [];
+      const dEl = document.getElementById('donasiList');
+      if(!u) { dEl.innerHTML = '<p class="small">Silakan login untuk melihat riwayat donasi.</p>'; }
+      else if(myP.length === 0) { dEl.innerHTML = '<p class="small">Belum ada donasi.</p>'; }
+      else { dEl.innerHTML = myP.map(p => `
+        <div class="list-item">
+          <strong>Rp ${number(p.nominal)}</strong>
+          <div class="meta">Tanggal: ${new Date(p.tanggal_pembayaran).toLocaleString()} • Status: ${p.status}</div>
+          <div style="margin-top:6px">Catatan: ${p.catatan || '-'}</div>
+        </div>
+      `).join(''); }
+
+      // Konsultasi
+      const kons = JSON.parse(localStorage.getItem('konsultasi') || '[]');
+      const myK = u ? kons.filter(k => k.user_email === u.email) : [];
+      const kEl = document.getElementById('konsulList');
+      if(!u) { kEl.innerHTML = '<p class="small">Silakan login untuk melihat riwayat konsultasi.</p>'; }
+      else if(myK.length === 0) { kEl.innerHTML = '<p class="small">Belum ada permintaan konsultasi.</p>'; }
+      else { kEl.innerHTML = myK.map(k => `
+        <div class="list-item">
+          <strong>${k.subject}</strong>
+          <div class="meta">Dikirim: ${new Date(k.tanggal).toLocaleString()} • Status: ${k.status}</div>
+          <div style="margin-top:6px">${(k.desc||'').replace(/\n/g,'<br>')}</div>
+        </div>
+      `).join(''); }
+    }
+
+    // initial render
+    renderProfile();
+    renderHistories();
+  </script>
+</body>
+</html>
